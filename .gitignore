@@ -1,0 +1,9 @@
+*.pyc
+seniority/*.sqlite3*
+py2/
+venv/
+__pycache__/
+.DS_Store
+.DS_Store/
+*.log
+_logs/

@@ -34,3 +34,23 @@ if __name__ == '__main__':
 
     new_df = calculate_matched_score(df)
     new_df.to_excel(r'company_webtitle_copyright_match_result.xlsx', index = False, header=True)
+
+
+    # =================================================================================================================== #
+
+    cr_txt = "copyright © 2006 - 2020 by ttt corporation" 
+    website_title = "TTT Corporation"
+    site_name = "TTT Corporation"
+    company_name = "TTT Co., Ltd"
+    website_url = "www.vi.ttt.vn"
+
+    matching = cnameMatcher(company_name,website_title=website_title,copyright_statement=cr_txt,web_url=website_url)
+    print(
+        f"{matching.company_name} \n{matching.copyright_statement} \n{matching.website_title} \n{matching.web_domain} "
+    )
+    print("")
+    print(
+        f"matching result: {matching.result()}"
+    )
+
+    # =================================================================================================================== #
