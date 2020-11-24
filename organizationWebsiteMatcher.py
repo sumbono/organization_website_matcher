@@ -36,7 +36,7 @@ class cnameMatcher:
         text1 = None
         if text:
             # cleaning_splitter = '[^a-zA-Z0-9]+|singapore|copyright|©|all rights reserved|all right reserved|corporation|corp|incorporated|company|ltd|limited|pllc|llc|group|private|pte'
-            cleaning_splitter = 'copyright|©|all rights reserved|all right reserved|corporation|corp|incorporated|company|ltd|limited|pllc|plc|llc|private|pte|privacy|statement|sdn|bhd'
+            cleaning_splitter = 'copyright|©|all rights reserved|all right reserved|welcome to|home|corporation|corp|incorporated|company|ltd|limited|pllc|plc|llc|private|pte|privacy|statement|sdn|bhd'
             text_split = [s.strip() for s in re.split(cleaning_splitter, text.lower()) if s]
             text1 = self.year_cleaner(" ".join(text_split))
             # print(f"cleaned_text: {text1} \n")

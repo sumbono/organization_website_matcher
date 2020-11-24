@@ -4,36 +4,46 @@ import pandas as pd
 
 def calculate_matched_score(df):
     for index, row in tqdm(df.iterrows(),ncols=75,desc="Matching"): 
-        match_score,matched_text = 0,""
-        if bool(row['website_title'] or row['copyright_statement']):
-            c5 = False
-            if row['website_title']:
-                error_msg = [
-                    'timed out','page not found','not found','error','403 forbidden','forbidden','index of','coming soon',
-                    '508 resource limit is reached','resource limit is reached','site maintenance','domain error','iis7',
-                    'under construction','site unavailable','unavailable','bad request','untitled document','welcome to nginx!',
-                    'welcome to nginx','410 gone',
-                ]
-                c5 = any(ele in row['website_title'].lower() for ele in error_msg)
-            if not c5:
-                matching = cnameMatcher(row['company_name'],row['website_title'],row['copyright_statement'])
-                matching_result = matching.result()
-                matched_text = matching_result[0]
-                match_score = int(matching_result[1]) if int(matching_result[1]) == 100 else int(matching_result[1])+1
-                
-        row['matched_text'] = matched_text
-        row['rapidfuzz_score'] = match_score
+        company_name,website_title,cr_txt,website_url = None,None,None,None
+        company_name = row['Name']
+        website_title = row['website_title']
+        if not website_title:
+            website_title = row['website_name']
+        cr_txt = row['website_copyright']
+        website_url = row['Company Website']
+
+        matching = cnameMatcher(company_name,website_title=website_title,copyright_statement=cr_txt,web_url=website_url)
+        matching_result = matching.result()
+        matched_text = matching_result[0]
+        # match_score = int(matching_result[1]) if int(matching_result[1]) == 100 else int(matching_result[1])+1
+        match_score = matching_result[1]
+        
+        # row['matched_text'] = matched_text
+        # row['matched_score'] = match_score
+
+        df.at[index, 'matched_text'] = matched_text
+        df.at[index, 'matched_score'] = match_score
         
     return df
 
 if __name__ == '__main__':
-    df = pd.read_excel(r'company_webtitle_copyright.xlsx', sheet_name='Sheet1')
-    df['matched_text'] = ""
-    df['rapidfuzz_score'] = ""
-    df = df.replace(float('nan'), '', regex=True)
+    # df = pd.read_excel(r'company_webtitle_copyright.xlsx', sheet_name='Sheet1')
+    # df['matched_text'] = ""
+    # df['matched_score'] = ""
+    # df = df.replace(float('nan'), '', regex=True)
+    
+    # new_df = calculate_matched_score(df)
+    # new_df.to_excel(r'company_webtitle_copyright_match_result.xlsx', index = False, header=True)
 
-    new_df = calculate_matched_score(df)
-    new_df.to_excel(r'company_webtitle_copyright_match_result.xlsx', index = False, header=True)
+    # df = pd.read_excel(r'StarHub-UEN_Batch 3 withdirector_count_MoreThanOne_new.xlsx', sheet_name='StarHub-UEN_Batch 3 withdirecto')
+    # df['matched_text'] = ""
+    # df['matched_score'] = ""
+    # df = df.replace(float('nan'), '', regex=True)
+    # print( df.head(15) )
+
+    # new_df = calculate_matched_score(df)
+    # print( new_df.head(15) )
+    # new_df.to_excel(r'StarHub-UEN_Batch 3 withdirector_count_MoreThanOne_new1.xlsx', index=False, header=True)
 
 
     # =================================================================================================================== #
